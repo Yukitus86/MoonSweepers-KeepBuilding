@@ -26,6 +26,14 @@ In vanilla Moon Sweepers **the hammer forgets your selection after every placeme
 each copy. With **KeepBuilding** the building stays selected, with its rotation, until you pick something else or
 cancel.
 
+<div align="center">
+
+[![KeepBuilding demo: one J.O.O.N.A.S. selection placed several times in a row](assets/demo.gif)](assets/demo.mp4)
+
+<sub>One selection, many buildings. The menu only opens to pick the next building. Click for the sharper video.</sub>
+
+</div>
+
 ## Features
 
 | | |
