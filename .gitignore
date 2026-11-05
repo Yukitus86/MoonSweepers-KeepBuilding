@@ -1,0 +1,12 @@
+build/
+dist/
+*.zip
+*.obj
+*.res
+*.exp
+*.lib
+*.pdb
+*.ilk
+*.log
+.vs/
+notes.md

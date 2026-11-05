@@ -1,0 +1,120 @@
+LIBRARY dwmapi
+EXPORTS
+    DwmpDxGetWindowSharedSurface=p_DwmpDxGetWindowSharedSurface @100
+    DwmpDxUpdateWindowSharedSurface=p_DwmpDxUpdateWindowSharedSurface @101
+    DwmEnableComposition=p_DwmEnableComposition @102
+    p_Ordinal103 @103 NONAME
+    p_Ordinal104 @104 NONAME
+    p_Ordinal105 @105 NONAME
+    p_Ordinal106 @106 NONAME
+    p_Ordinal107 @107 NONAME
+    p_Ordinal108 @108 NONAME
+    p_Ordinal109 @109 NONAME
+    p_Ordinal110 @110 NONAME
+    DllCanUnloadNow=p_DllCanUnloadNow @111
+    p_Ordinal112 @112 NONAME
+    p_Ordinal113 @113 NONAME
+    p_Ordinal114 @114 NONAME
+    DllGetClassObject=p_DllGetClassObject @115
+    DwmAttachMilContent=p_DwmAttachMilContent @116
+    DwmDefWindowProc=p_DwmDefWindowProc @117
+    DwmDetachMilContent=p_DwmDetachMilContent @118
+    DwmEnableBlurBehindWindow=p_DwmEnableBlurBehindWindow @119
+    DwmEnableMMCSS=p_DwmEnableMMCSS @120
+    DwmExtendFrameIntoClientArea=p_DwmExtendFrameIntoClientArea @121
+    DwmFlush=p_DwmFlush @122
+    DwmGetColorizationColor=p_DwmGetColorizationColor @123
+    p_Ordinal124 @124 NONAME
+    DwmGetCompositionTimingInfo=p_DwmGetCompositionTimingInfo @125
+    DwmGetGraphicsStreamClient=p_DwmGetGraphicsStreamClient @126
+    DwmpGetColorizationParameters=p_DwmpGetColorizationParameters @127
+    DwmpDxgiIsThreadDesktopComposited=p_DwmpDxgiIsThreadDesktopComposited @128
+    DwmGetGraphicsStreamTransformHint=p_DwmGetGraphicsStreamTransformHint @129
+    DwmGetTransportAttributes=p_DwmGetTransportAttributes @130
+    DwmpSetColorizationParameters=p_DwmpSetColorizationParameters @131
+    p_Ordinal132 @132 NONAME
+    DwmGetUnmetTabRequirements=p_DwmGetUnmetTabRequirements @133
+    DwmGetWindowAttribute=p_DwmGetWindowAttribute @134
+    DwmpRenderFlick=p_DwmpRenderFlick @135
+    DwmpAllocateSecurityDescriptor=p_DwmpAllocateSecurityDescriptor @136
+    DwmpFreeSecurityDescriptor=p_DwmpFreeSecurityDescriptor @137
+    p_Ordinal138 @138 NONAME
+    p_Ordinal139 @139 NONAME
+    p_Ordinal140 @140 NONAME
+    p_Ordinal141 @141 NONAME
+    p_Ordinal142 @142 NONAME
+    DwmpEnableDDASupport=p_DwmpEnableDDASupport @143
+    p_Ordinal144 @144 NONAME
+    p_Ordinal145 @145 NONAME
+    DwmInvalidateIconicBitmaps=p_DwmInvalidateIconicBitmaps @146
+    p_Ordinal147 @147 NONAME
+    p_Ordinal148 @148 NONAME
+    DwmIsCompositionEnabled=p_DwmIsCompositionEnabled @149
+    p_Ordinal150 @150 NONAME
+    p_Ordinal151 @151 NONAME
+    p_Ordinal152 @152 NONAME
+    p_Ordinal153 @153 NONAME
+    p_Ordinal154 @154 NONAME
+    p_Ordinal155 @155 NONAME
+    DwmTetherTextContact=p_DwmTetherTextContact @156
+    p_Ordinal157 @157 NONAME
+    p_Ordinal158 @158 NONAME
+    p_Ordinal159 @159 NONAME
+    p_Ordinal160 @160 NONAME
+    p_Ordinal161 @161 NONAME
+    p_Ordinal162 @162 NONAME
+    p_Ordinal163 @163 NONAME
+    p_Ordinal164 @164 NONAME
+    p_Ordinal165 @165 NONAME
+    p_Ordinal166 @166 NONAME
+    p_Ordinal167 @167 NONAME
+    p_Ordinal168 @168 NONAME
+    p_Ordinal169 @169 NONAME
+    p_Ordinal170 @170 NONAME
+    p_Ordinal171 @171 NONAME
+    p_Ordinal172 @172 NONAME
+    p_Ordinal173 @173 NONAME
+    p_Ordinal174 @174 NONAME
+    p_Ordinal175 @175 NONAME
+    p_Ordinal176 @176 NONAME
+    p_Ordinal177 @177 NONAME
+    p_Ordinal178 @178 NONAME
+    p_Ordinal179 @179 NONAME
+    p_Ordinal180 @180 NONAME
+    p_Ordinal181 @181 NONAME
+    p_Ordinal182 @182 NONAME
+    DwmpUpdateProxyWindowForCapture=p_DwmpUpdateProxyWindowForCapture @183
+    p_Ordinal184 @184 NONAME
+    p_Ordinal185 @185 NONAME
+    p_Ordinal186 @186 NONAME
+    p_Ordinal187 @187 NONAME
+    p_Ordinal188 @188 NONAME
+    p_Ordinal189 @189 NONAME
+    p_Ordinal190 @190 NONAME
+    p_Ordinal191 @191 NONAME
+    p_Ordinal192 @192 NONAME
+    p_Ordinal193 @193 NONAME
+    p_Ordinal194 @194 NONAME
+    p_Ordinal195 @195 NONAME
+    p_Ordinal196 @196 NONAME
+    p_Ordinal197 @197 NONAME
+    DwmModifyPreviousDxFrameDuration=p_DwmModifyPreviousDxFrameDuration @198
+    p_Ordinal199 @199 NONAME
+    p_Ordinal200 @200 NONAME
+    p_Ordinal201 @201 NONAME
+    p_Ordinal202 @202 NONAME
+    p_Ordinal203 @203 NONAME
+    p_Ordinal204 @204 NONAME
+    DwmQueryThumbnailSourceSize=p_DwmQueryThumbnailSourceSize @205
+    DwmRegisterThumbnail=p_DwmRegisterThumbnail @206
+    DwmRenderGesture=p_DwmRenderGesture @207
+    DwmSetDxFrameDuration=p_DwmSetDxFrameDuration @208
+    DwmSetIconicLivePreviewBitmap=p_DwmSetIconicLivePreviewBitmap @209
+    DwmSetIconicThumbnail=p_DwmSetIconicThumbnail @210
+    DwmSetPresentParameters=p_DwmSetPresentParameters @211
+    DwmSetWindowAttribute=p_DwmSetWindowAttribute @212
+    DwmShowContact=p_DwmShowContact @213
+    DwmTetherContact=p_DwmTetherContact @214
+    DwmTransitionOwnedWindow=p_DwmTransitionOwnedWindow @215
+    DwmUnregisterThumbnail=p_DwmUnregisterThumbnail @216
+    DwmUpdateThumbnailProperties=p_DwmUpdateThumbnailProperties @217
