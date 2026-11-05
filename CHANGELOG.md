@@ -15,7 +15,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - First release.
 - The selected building stays on the hammer after placing it, with its rotation, until you pick something else or
   cancel.
-- Proxy `dwmapi.dll`: no mod loader required, and it runs next to NoFocusLoss.
+- Proxy `dwmapi.dll`: no mod loader required, and it runs next to [NoFocusLoss](https://github.com/Yukitus86/MoonSweepers-NoFocusLoss).
 - `KeepBuilding.ini` with `Enabled`, `ConveyorAfterMachine` and `Log`.
 
 [Unreleased]: https://github.com/Yukitus86/MoonSweepers-KeepBuilding/compare/v1.0.0...HEAD

@@ -131,7 +131,7 @@ then set this in Steam → Moon Sweepers → **Properties** → **Launch Options
 WINEDLLOVERRIDES="dwmapi=n,b" %command%
 ```
 
-If you also use NoFocusLoss, combine both:
+If you also use [NoFocusLoss](https://github.com/Yukitus86/MoonSweepers-NoFocusLoss), combine both:
 
 ```text
 WINEDLLOVERRIDES="dwmapi,version=n,b" %command%
@@ -202,7 +202,7 @@ No. The game checks every spot and charges every building exactly as it does in 
 **Why `dwmapi.dll`?**
 Unity's `UnityPlayer.dll` loads `dwmapi.dll`, and Windows checks the game folder first. The mod passes every real
 `dwmapi.dll` function through to `C:\Windows\System32\dwmapi.dll`, so nothing breaks. Many mods and mod loaders use
-this "DLL proxy" technique. NoFocusLoss already uses `version.dll`, so this mod takes a different name to run next to
+this "DLL proxy" technique. [NoFocusLoss](https://github.com/Yukitus86/MoonSweepers-NoFocusLoss) already uses `version.dll`, so this mod takes a different name to run next to
 it.
 
 **Why not BepInEx?**
