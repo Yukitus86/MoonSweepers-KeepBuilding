@@ -60,7 +60,7 @@ To stop building, use the normal cancel key or switch tools.
    ├── MoonSweepers.exe
    ├── UnityPlayer.dll
    ├── dwmapi.dll          ◄ from the mod
-   ├── KeepBuilding.ini   ◄ from the mod
+   ├── KeepBuilding.ini    ◄ from the mod
    └── ...
    ```
 
@@ -68,6 +68,16 @@ To stop building, use the normal cancel key or switch tools.
 
 > [!TIP]
 > Default game folder: `C:\Program Files (x86)\Steam\steamapps\common\Moon Sweepers`
+
+> [!IMPORTANT]
+> **Important for Linux and Steam Deck players:** Proton ignores the mod unless you add this to Steam → Moon Sweepers →
+> **Properties** → **Launch Options**:
+>
+> ```text
+> WINEDLLOVERRIDES="dwmapi=n,b" %command%
+> ```
+>
+> This setup is still untested. [More details](#linux--steam-deck-proton).
 
 ### Verify
 
@@ -119,6 +129,12 @@ then set this in Steam → Moon Sweepers → **Properties** → **Launch Options
 
 ```text
 WINEDLLOVERRIDES="dwmapi=n,b" %command%
+```
+
+If you also use NoFocusLoss, combine both:
+
+```text
+WINEDLLOVERRIDES="dwmapi,version=n,b" %command%
 ```
 
 If you try this, please report back in an [issue](https://github.com/Yukitus86/MoonSweepers-KeepBuilding/issues).
