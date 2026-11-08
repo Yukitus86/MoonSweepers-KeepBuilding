@@ -43,7 +43,7 @@ cancel.
 | 🛡️ **Same rules as always** | Every spot is checked again and every building costs its normal price |
 | 🏭 **Machines too** | Machines stay selected instead of switching to the conveyor tool (configurable) |
 | 📦 **No mod loader** | One DLL. No BepInEx or MelonLoader needed |
-| 🤝 **Plays nice** | Works next to [NoFocusLoss](https://github.com/Yukitus86/MoonSweepers-NoFocusLoss) |
+| 🤝 **Plays nice** | Works next to [NoFocusLoss](https://github.com/Yukitus86/MoonSweepers-NoFocusLoss) and leaves BepInEx's loader alone |
 | 🧹 **Clean uninstall** | Delete two files and the game is vanilla again |
 
 To stop building, use the normal cancel key or switch tools.
@@ -84,8 +84,8 @@ To stop building, use the normal cancel key or switch tools.
 After starting the game, `KeepBuilding.log` appears in the game folder:
 
 ```text
-KeepBuilding 1.0.0 loaded. Enabled=1 ConveyorAfterMachine=0
-Caught il2cpp_init.
+KeepBuilding 1.0.1 loaded. Enabled=1 ConveyorAfterMachine=0
+Hooked il2cpp_init in GameAssembly.dll.
 Hook installed (MachineBuilt at ...).
 ```
 
@@ -175,6 +175,15 @@ A game update changed the builder code. The mod switches itself off and the game
 </details>
 
 <details>
+<summary><b>BepInEx stops loading when KeepBuilding is installed</b></summary>
+
+Update to KeepBuilding 1.0.1 or newer. Version 1.0.0 changed an import of `UnityPlayer.dll` that BepInEx's loader
+(Doorstop) also needs, so Doorstop gave up with `Failed to install IAT hook!`. Since 1.0.1 the mod hooks the game
+directly and leaves all imports untouched.
+
+</details>
+
+<details>
 <summary><b>Another mod also uses <code>dwmapi.dll</code></b></summary>
 
 Only one `dwmapi.dll` can be in the game folder, so the two mods can't run together.
@@ -207,7 +216,11 @@ it.
 
 **Why not BepInEx?**
 Moon Sweepers uses Unity 6000.6 with IL2CPP metadata v108, which BepInEx doesn't officially support yet. A native DLL
-works whatever the IL2CPP version.
+works whatever the IL2CPP version, and it's easier to install.
+
+**Can I use it together with BepInEx mods?**
+Yes, since 1.0.1. BepInEx loads through its own `winhttp.dll`, KeepBuilding through `dwmapi.dll`, and the two no
+longer touch the same code.
 
 ## How it works
 
@@ -215,7 +228,7 @@ works whatever the IL2CPP version.
 MoonSweepers.exe
  └─ UnityPlayer.dll ──loads──► dwmapi.dll (KeepBuilding)
                                  ├─ forwards real API ──► System32\dwmapi.dll
-                                 ├─ catches il2cpp_init through UnityPlayer's GetProcAddress import
+                                 ├─ waits for GameAssembly.dll to load, then hooks il2cpp_init there
                                  └─ hooks MoonDepotBuilder.MachineBuilt in GameAssembly.dll
 ```
 
@@ -227,7 +240,10 @@ MoonSweepers.exe
 3. **Keep placing.** The hook gives every other building the foundation treatment: it ends any machine snap, drops the
    old placement checks and ignores the rest of the click. The game then checks the spot again with the new building
    on it, so nothing can be built twice in the same place.
-4. **Safety.** If a game update changes a name or the start of the function, the mod logs it and leaves the game
+4. **No import patching.** The mod never changes the import table of `UnityPlayer.dll`. A loader notification tells
+   it when `GameAssembly.dll` is mapped, and it hooks `il2cpp_init` before that code runs. Loaders that do patch
+   imports, like BepInEx's Doorstop, keep working.
+5. **Safety.** If a game update changes a name or the start of the function, the mod logs it and leaves the game
    vanilla instead of patching blindly.
 
 ## Building from source

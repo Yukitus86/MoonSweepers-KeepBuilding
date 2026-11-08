@@ -5,8 +5,9 @@
  * again and again without reopening the build menu.
  *
  * Loaded as a dwmapi.dll proxy (every export jumps to C:\Windows\System32\dwmapi.dll).
- * It catches il2cpp_init via UnityPlayer's GetProcAddress import, then talks to the
- * IL2CPP runtime through GameAssembly.dll's public il2cpp_* exports.
+ * When GameAssembly.dll is loaded it hooks il2cpp_init there, then talks to the
+ * IL2CPP runtime through GameAssembly.dll's public il2cpp_* exports. No imports are
+ * patched, so it runs next to BepInEx (Doorstop) and other proxy mods.
  *
  * In the game, MoonDepotBuilder.MachineBuilt runs after every successful build and ends
  * the placement (CancelPlacement) or jumps to the conveyor tool (BeginConveyor).
@@ -25,7 +26,7 @@
 
 #include "dwmapi_exports.h"
 
-#define MOD_VERSION "1.0.0"
+#define MOD_VERSION "1.0.1"
 
 /* ------------------------------------------------------------------------ */
 /* dwmapi forwarding                                                          */
@@ -326,44 +327,75 @@ static int h_il2cpp_init(const char *domain)
     return r;
 }
 
-typedef FARPROC(WINAPI *GetProcAddress_t)(HMODULE, LPCSTR);
-static GetProcAddress_t o_GetProcAddress;
-
-static FARPROC WINAPI h_GetProcAddress(HMODULE m, LPCSTR name)
+/* Finds an export by name without GetProcAddress (safe inside the loader callback). */
+static void *find_export(BYTE *b, const char *func)
 {
-    FARPROC r = o_GetProcAddress(m, name);
-    if (r && !o_il2cpp_init && (ULONG_PTR)name > 0xFFFF && strcmp(name, "il2cpp_init") == 0) {
-        o_il2cpp_init = (il2cpp_init_t)(void *)r;
-        logf_("Caught il2cpp_init.");
-        return (FARPROC)(void *)h_il2cpp_init;
+    IMAGE_NT_HEADERS *nt = (IMAGE_NT_HEADERS *)(b + ((IMAGE_DOS_HEADER *)b)->e_lfanew);
+    IMAGE_DATA_DIRECTORY dir = nt->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT];
+    if (!dir.VirtualAddress) return NULL;
+    IMAGE_EXPORT_DIRECTORY *ed = (IMAGE_EXPORT_DIRECTORY *)(b + dir.VirtualAddress);
+    DWORD *names = (DWORD *)(b + ed->AddressOfNames);
+    WORD *ords = (WORD *)(b + ed->AddressOfNameOrdinals);
+    DWORD *funcs = (DWORD *)(b + ed->AddressOfFunctions);
+    for (DWORD i = 0; i < ed->NumberOfNames; i++) {
+        if (strcmp((char *)(b + names[i]), func) != 0) continue;
+        DWORD rva = funcs[ords[i]];
+        if (rva >= dir.VirtualAddress && rva < dir.VirtualAddress + dir.Size) return NULL; /* forwarder */
+        return b + rva;
     }
-    return r;
+    return NULL;
 }
 
-/* Patch one import of `mod` (by dll + function name) to point to `hook`. */
-static int patch_iat(HMODULE mod, const char *dll, const char *func, void *hook, void **orig)
+static volatile LONG g_init_hooked;
+
+/* Called once GameAssembly.dll is mapped, before any of its code runs. */
+static void hook_il2cpp_init(BYTE *game_assembly)
 {
-    BYTE *b = (BYTE *)mod;
-    IMAGE_NT_HEADERS *nt = (IMAGE_NT_HEADERS *)(b + ((IMAGE_DOS_HEADER *)b)->e_lfanew);
-    IMAGE_DATA_DIRECTORY dir = nt->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT];
-    if (!dir.VirtualAddress) return 0;
-    for (IMAGE_IMPORT_DESCRIPTOR *d = (IMAGE_IMPORT_DESCRIPTOR *)(b + dir.VirtualAddress); d->Name; d++) {
-        if (_stricmp((char *)(b + d->Name), dll) != 0) continue;
-        IMAGE_THUNK_DATA *names = (IMAGE_THUNK_DATA *)(b + (d->OriginalFirstThunk ? d->OriginalFirstThunk : d->FirstThunk));
-        IMAGE_THUNK_DATA *addrs = (IMAGE_THUNK_DATA *)(b + d->FirstThunk);
-        for (; names->u1.AddressOfData; names++, addrs++) {
-            if (IMAGE_SNAP_BY_ORDINAL(names->u1.Ordinal)) continue;
-            IMAGE_IMPORT_BY_NAME *ibn = (IMAGE_IMPORT_BY_NAME *)(b + names->u1.AddressOfData);
-            if (strcmp((char *)ibn->Name, func) != 0) continue;
-            DWORD old;
-            VirtualProtect(&addrs->u1.Function, sizeof(void *), PAGE_READWRITE, &old);
-            if (orig) *orig = (void *)addrs->u1.Function;
-            addrs->u1.Function = (ULONG_PTR)hook;
-            VirtualProtect(&addrs->u1.Function, sizeof(void *), old, &old);
-            return 1;
-        }
-    }
-    return 0;
+    if (InterlockedExchange(&g_init_hooked, 1)) return;
+    void *init = find_export(game_assembly, "il2cpp_init");
+    if (!init) { logf_("il2cpp_init not found in GameAssembly.dll - mod inactive."); return; }
+    o_il2cpp_init = (il2cpp_init_t)install_hook(init, (void *)h_il2cpp_init);
+    if (o_il2cpp_init) logf_("Hooked il2cpp_init in GameAssembly.dll.");
+    else logf_("Could not hook il2cpp_init - mod inactive.");
+}
+
+/* Loader notifications (documented ntdll API, also implemented by Wine/Proton). */
+typedef struct {
+    USHORT Length, MaximumLength;
+    PWSTR Buffer;
+} LdrUnicodeString;
+typedef struct {
+    ULONG Flags;
+    const LdrUnicodeString *FullDllName;
+    const LdrUnicodeString *BaseDllName;
+    PVOID DllBase;
+    ULONG SizeOfImage;
+} LdrDllLoadedData;
+#define LDR_DLL_NOTIFICATION_REASON_LOADED 1
+typedef VOID(CALLBACK *LdrDllNotification_t)(ULONG, const LdrDllLoadedData *, PVOID);
+typedef LONG(NTAPI *LdrRegisterDllNotification_t)(ULONG, LdrDllNotification_t, PVOID, PVOID *);
+
+static VOID CALLBACK on_dll_loaded(ULONG reason, const LdrDllLoadedData *d, PVOID ctx)
+{
+    (void)ctx;
+    if (reason != LDR_DLL_NOTIFICATION_REASON_LOADED || !d || !d->BaseDllName || !d->BaseDllName->Buffer) return;
+    static const wchar_t want[] = L"GameAssembly.dll";
+    size_t len = d->BaseDllName->Length / sizeof(wchar_t);
+    if (len != wcslen(want) || _wcsnicmp(d->BaseDllName->Buffer, want, len) != 0) return;
+    hook_il2cpp_init((BYTE *)d->DllBase);
+}
+
+/* Unlike patching UnityPlayer's GetProcAddress import, this leaves every import
+   untouched, so loaders that patch imports themselves (BepInEx's Doorstop) still work. */
+static void watch_for_game_assembly(void)
+{
+    HMODULE ga = GetModuleHandleW(L"GameAssembly.dll");
+    if (ga) { hook_il2cpp_init((BYTE *)ga); return; }
+    LdrRegisterDllNotification_t reg =
+        (LdrRegisterDllNotification_t)(void *)GetProcAddress(GetModuleHandleW(L"ntdll.dll"), "LdrRegisterDllNotification");
+    PVOID cookie;
+    if (!reg || reg(0, on_dll_loaded, NULL, &cookie) != 0)
+        logf_("Could not watch for GameAssembly.dll - mod inactive.");
 }
 
 BOOL WINAPI DllMain(HINSTANCE self, DWORD reason, LPVOID reserved)
@@ -389,8 +421,6 @@ BOOL WINAPI DllMain(HINSTANCE self, DWORD reason, LPVOID reserved)
           ini_int(L"ConveyorAfterMachine", 0));
     if (!enabled) return TRUE;
 
-    HMODULE up = GetModuleHandleW(L"UnityPlayer.dll");
-    if (!up || !patch_iat(up, "KERNEL32.dll", "GetProcAddress", (void *)h_GetProcAddress, (void **)&o_GetProcAddress))
-        logf_("Could not hook GetProcAddress in UnityPlayer.dll - mod inactive.");
+    watch_for_game_assembly();
     return TRUE;
 }
