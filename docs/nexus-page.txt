@@ -8,12 +8,17 @@ KeepBuilding - Place the Same Building Again and Again
 Miscellaneous
 
 ===== SUMMARY =====
-The hammer stops forgetting your selection. Your building stays selected with its rotation after you place it, so you don't reopen the build menu for every copy. Normal costs and placement rules still apply. No BepInEx or mod loader needed: one DLL, drop it in.
+UPDATE 1.0.1: BepInEx fixed, works next to BepInEx mods now. The hammer stops forgetting your selection. Your building stays selected with its rotation after you place it, so you don't reopen the build menu for every copy. Normal costs and placement rules still apply. No BepInEx or mod loader needed: one DLL, drop it in.
 
 ===== FILE NAME =====
 KeepBuilding v1.0.1
 
 ===== DESCRIPTION (BBCode) =====
+[center][size=5][color=#ff9900][b]UPDATE 1.0.1: BepInEx FIXED[/b][/color][/size]
+[size=3]KeepBuilding no longer stops BepInEx from loading. Using BepInEx mods? Download [b]1.0.1[/b] and replace [b]dwmapi.dll[/b].[/size][/center]
+
+[line]
+
 [center][size=5][b]KeepBuilding[/b][/size]
 [size=3]Place the same building again and again[/size][/center]
 
