@@ -29,7 +29,7 @@ With [b]KeepBuilding[/b] the building [b]stays selected[/b], with its rotation, 
 [*][b]Rotation stays.[/b] The ghost keeps its rotation and free-placement mode.
 [*][b]Same rules as always.[/b] Every spot is checked again and every building costs its normal price.
 [*][b]Machines too.[/b] Machines stay selected instead of switching to the conveyor tool (configurable).
-[*][b]No mod loader needed.[/b] No BepInEx, no patcher, no MoonFramework. One DLL, drop it in.
+[*][b]No mod loader needed.[/b] No BepInEx, no patcher, no MoonFramework. One DLL, drop it in. Since 1.0.1 it also runs next to BepInEx mods.
 [*][b]Runs next to NoFocusLoss.[/b] Works alongside my [url=https://www.nexusmods.com/moonsweepers/mods/138]NoFocusLoss[/url] mod.
 [*][b]Easy to remove.[/b] Delete the files and the game is vanilla again.
 [*][b]Open source[/b] under the MIT license.
