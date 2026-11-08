@@ -1,0 +1,91 @@
+===== MOD NAME =====
+KeepBuilding - Place the Same Building Again and Again
+
+===== VERSION =====
+1.0.1
+
+===== CATEGORY =====
+Miscellaneous
+
+===== SUMMARY =====
+The hammer stops forgetting your selection. Your building stays selected with its rotation after you place it, so you don't reopen the build menu for every copy. Normal costs and placement rules still apply. No BepInEx or mod loader needed: one DLL, drop it in.
+
+===== FILE NAME =====
+KeepBuilding v1.0.1
+
+===== DESCRIPTION (BBCode) =====
+[center][size=5][b]KeepBuilding[/b][/size]
+[size=3]Place the same building again and again[/size][/center]
+
+In vanilla Moon Sweepers [b]the hammer forgets your selection after every placement[/b], so you reopen the build menu for each copy.
+
+With [b]KeepBuilding[/b] the building [b]stays selected[/b], with its rotation, until you pick something else or cancel.
+
+[line]
+
+[size=4][b]Features[/b][/size]
+[list]
+[*][b]Selection stays.[/b] Place, move on, place again. The menu stays closed.
+[*][b]Rotation stays.[/b] The ghost keeps its rotation and free-placement mode.
+[*][b]Same rules as always.[/b] Every spot is checked again and every building costs its normal price.
+[*][b]Machines too.[/b] Machines stay selected instead of switching to the conveyor tool (configurable).
+[*][b]No mod loader needed.[/b] No BepInEx, no patcher, no MoonFramework. One DLL, drop it in.
+[*][b]Runs next to NoFocusLoss.[/b] Works alongside my [url=https://www.nexusmods.com/moonsweepers/mods/138]NoFocusLoss[/url] mod.
+[*][b]Easy to remove.[/b] Delete the files and the game is vanilla again.
+[*][b]Open source[/b] under the MIT license.
+[/list]
+
+To stop building, use the normal cancel key or switch tools.
+
+[line]
+
+[size=4][b]Installation[/b][/size]
+[list=1]
+[*]In your Steam library, right-click [b]Moon Sweepers[/b] > [b]Manage[/b] > [b]Browse local files[/b].
+[*]Extract [b]dwmapi.dll[/b] and [b]KeepBuilding.ini[/b] from the zip into that folder, next to [i]MoonSweepers.exe[/i].
+[*]Start the game as usual.
+[/list]
+
+To check that it works, open [b]KeepBuilding.log[/b] in the game folder. After you place a building it contains:
+[code]Building placed, selection kept.[/code]
+
+[size=4][b]Uninstall[/b][/size]
+Delete [b]dwmapi.dll[/b], [b]KeepBuilding.ini[/b] and [b]KeepBuilding.log[/b] from the game folder.
+
+[line]
+
+[size=4][b]Settings[/b][/size]
+Edit [b]KeepBuilding.ini[/b] in the game folder (1 = on, 0 = off). Changes apply the next time you place something.
+[list]
+[*][b]Enabled[/b] (default 1): turns the mod on or off. A game started with 0 needs a restart to turn it on.
+[*][b]ConveyorAfterMachine[/b] (default 0): in vanilla, machines with conveyor ports switch to the conveyor tool after placing. 0 keeps the machine selected, 1 switches like vanilla.
+[*][b]Log[/b] (default 1): writes KeepBuilding.log to the game folder. Read when the game starts.
+[/list]
+
+[line]
+
+[size=4][b]Compatibility[/b][/size]
+[list]
+[*]Windows 11 x64: tested.
+[*]Windows 10 x64: untested, should work.
+[*]Multiplayer: untested.
+[*]Linux / Steam Deck (Proton): untested. Set the launch option [b]WINEDLLOVERRIDES="dwmapi=n,b" %command%[/b] and let me know if it works.
+[*]BepInEx: since 1.0.1 KeepBuilding no longer stops BepInEx from loading, so you can use both. Update if BepInEx broke with 1.0.0.
+[*]Other mods: if another mod also uses a dwmapi.dll, the two will conflict.
+[/list]
+
+If a game update changes the code this mod relies on, it logs that and leaves the game vanilla instead of patching blindly.
+
+[size=4][b]Antivirus warnings[/b][/size]
+The mod is a proxy DLL, a technique that sometimes triggers false positives. The full source is public, so you can read it or build it yourself.
+
+[line]
+
+[b]Source code, issues and changelog:[/b] [url=https://github.com/Yukitus86/MoonSweepers-KeepBuilding]GitHub[/url]
+
+[i]Not affiliated with the developers of Moon Sweepers.[/i]
+
+[line]
+
+[size=4][b]AI disclosure[/b][/size]
+The code and the text on this page were generated with Claude (Anthropic's AI). I directed the project and tested the mod in the actual game. The full source is public on GitHub, so anyone can review it.
