@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/logo.png" alt="KeepBuilding logo" width="160">
+<img src="assets/banner.png" alt="KeepBuilding banner: a row of J.O.O.N.A.S. units placed one after another on the Moon">
 
 # KeepBuilding
 
